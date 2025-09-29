@@ -30,6 +30,10 @@ enum Categories: CaseIterable, Hashable, Codable {
     }
 }
 
+enum Hot: Int, CaseIterable, Hashable, Codable {
+    case one = 1, two = 2, three = 3
+}
+
 enum RecipeDifficulty: String, Codable, CaseIterable {
     case low = "Low"
     case medium = "Medium"
@@ -50,7 +54,7 @@ struct Recipe: Identifiable, Codable, Hashable {
     let imageName: String
     let cookingTime: String
     let difficulty: RecipeDifficulty
-    var isFavorite: Bool
+    let hot: Hot
     
     let ingredients: [String]
     let steps: [RecipeStep]
@@ -63,7 +67,7 @@ struct Recipe: Identifiable, Codable, Hashable {
         imageName: String,
         cookingTime: String,
         difficulty: RecipeDifficulty,
-        isFavorite: Bool = false,
+        hot: Hot,
         ingredients: [String],
         steps: [RecipeStep]
     ) {
@@ -74,13 +78,13 @@ struct Recipe: Identifiable, Codable, Hashable {
         self.imageName = imageName
         self.cookingTime = cookingTime
         self.difficulty = difficulty
-        self.isFavorite = isFavorite
+        self.hot = hot
         self.ingredients = ingredients
         self.steps = steps
     }
 }
 
- struct RecipeData {
+struct RecipeData {
     static let all: [Recipe] = [
         Recipe(
             category: .chicken,
@@ -89,6 +93,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "Hatch",
             cookingTime: "00:30",
             difficulty: .medium,
+            hot: .one,
             ingredients: [
                 "2-2.5 lbs. Hatch chiles",
                 "2 lbs. chicken",
@@ -111,7 +116,6 @@ struct Recipe: Identifiable, Codable, Hashable {
                 RecipeStep(id: 7, description: "Your Hatch Chicken Chile Verde is already loaded with flavor so feel free to serve it up as you see fit! Even a big spoonful over white rice is a quick, satisfying meal that I frequently munch on"),
                 RecipeStep(id: 8, description: "If you want to make the Tostadas, start by warming up the tostada shells in the oven for a few minutes. I usually warm up the refried beans too. Then load up each tostada shell with a thin layer of refried beans, plenty of Hatch Chicken, Queso Fresco, freshly chopped cilantro, and a squeeze of lime."),
                 RecipeStep(id: 9, description: "Store leftover Hatch Chicken Chile Verde in the fridge where it will keep for a few day"),
-                
             ]
         ),
         
@@ -122,6 +126,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "chicken_chile_verde",
             cookingTime: "00:40",
             difficulty: .medium,
+            hot: .three, 
             ingredients: [
                 "2 lbs. chicken (3 boneless chicken breasts)",
                 "8-10 tomatillos",
@@ -155,6 +160,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "mexican_chicken_rice",
             cookingTime: "01:00",
             difficulty: .medium,
+            hot: .two, // Добавлено: содержит jalapeño
             ingredients: [
                 "2-3 lbs. chicken (5 bone-in chicken thighs)",
                 "2 cups uncooked rice",
@@ -192,6 +198,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "spicy_chicken_jalapeno_pizza",
             cookingTime: "01:00",
             difficulty: .hard,
+            hot: .two, // Добавлено: содержит pickled jalapenos
             ingredients: [
                 "1 cup pickled jalapenos",
                 "1 cup cubed Mozzarella cheese",
@@ -231,6 +238,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "arroz_wings_chipotles",
             cookingTime: "00:30",
             difficulty: .low,
+            hot: .two, // Добавлено: содержит chipotles
             ingredients: [
                 "4-6 chicken wings (approx. 1/2 lb.)",
                 "1-2 plum tomatoes",
@@ -248,7 +256,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             steps: [
                 RecipeStep(id: 1, description: "Heat oil over medium-high in a saucepan. Add chicken wings and brown each side for a few minutes. Remove and set aside."),
                 RecipeStep(id: 2, description: "Add 1/2 cup uncooked rice to the same pan. Stir and cook over medium heat until rice turns golden brown."),
-                RecipeStep(id: 3, description: "Blend together 1–2 plum tomatoes (rinsed, de-stemmed), 1/4 onion, 1 garlic clove, and 1–2 chipotles in adobo. Use less chipotle for a milder version. (Optional: remove chipotle seeds)."),
+                RecipeStep(id: 3, description: "Blend together 1–2 plum tomatoes (rinsed, de-stemmed), 1/4 onion, 1 garlic clove, и 1–2 chipotles in adobo. Use less chipotle for a milder version. (Optional: remove chipotle seeds)."),
                 RecipeStep(id: 4, description: "Add the blended mixture to the pan with rice. Simmer a few minutes, stirring regularly."),
                 RecipeStep(id: 5, description: "Add 1 tsp oregano, pinch of cumin (optional), 1/4 tsp salt, freshly cracked black pepper, and 1 cup stock. Stir well and bring to boil. Taste for salt and adjust if needed."),
                 RecipeStep(id: 6, description: "Return browned chicken wings to the pan. Bring to boil, then cover and reduce heat to low. Simmer 20–25 minutes until liquid is absorbed."),
@@ -263,6 +271,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "chicken_burrito_chipotle_crema",
             cookingTime: "00:25",
             difficulty: .low,
+            hot: .one, // Добавлено: содержит chipotle crema
             ingredients: [
                 "1 chicken breast",
                 "1 cup refried beans",
@@ -296,6 +305,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "baja_fish_tacos",
             cookingTime: "01:00",
             difficulty: .medium,
+            hot: .one, // Добавлено: содержит chipotle crema
             ingredients: [
                 // Рыба и тесто
                 "450 g white fish (cod, tilapia, hake)",
@@ -308,7 +318,7 @@ struct Recipe: Identifiable, Codable, Hashable {
                 "10–12 corn tortillas",
                 "2–3 limes",
                 "3–4 cups frying oil (canola or sunflower)",
-
+                
                 // Chipotle Crema
                 "1 cup mayonnaise (or half mayo, half Greek yogurt)",
                 "2 chipotles in adobo",
@@ -316,7 +326,7 @@ struct Recipe: Identifiable, Codable, Hashable {
                 "2 garlic cloves",
                 "squeeze of lime",
                 "pinch of salt",
-
+                
                 // Curtido (pickled cabbage)
                 "1/3 head green cabbage",
                 "1/4 onion",
@@ -345,6 +355,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "tinga_tostadas",
             cookingTime: "00:20",
             difficulty: .medium,
+            hot: .two, // Добавлено: содержит chipotles
             ingredients: [
                 "8–10 tostadas",
                 "refried beans (optional)",
@@ -353,7 +364,7 @@ struct Recipe: Identifiable, Codable, Hashable {
                 "freshly chopped cilantro (optional)",
                 "lime wedges",
                 "1/4 cup salt (for brining)",
-
+                
                 "2 chicken breasts",
                 "2 plum tomatoes",
                 "4–5 tomatillos",
@@ -379,6 +390,7 @@ struct Recipe: Identifiable, Codable, Hashable {
                 RecipeStep(id: 9, description: "Assemble: spread refried beans, add Chicken Tinga, then garnish with cheese, crema, cilantro, and lime juice. Serve immediately.")
             ]
         ),
+        
         Recipe(
             category: .tacos,
             title: "Birria de Res — Beef Birria",
@@ -386,6 +398,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "birria_de_res",
             cookingTime: "06:30",
             difficulty: .hard,
+            hot: .three, // Добавлено: содержит много острых перцев
             ingredients: [
                 "3 lbs beef brisket or chuck roast",
                 "4–5 Roma tomatoes",
@@ -403,7 +416,7 @@ struct Recipe: Identifiable, Codable, Hashable {
                 "2 tsp salt (plus more to taste)",
                 "freshly cracked black pepper",
                 "olive oil",
-
+                
                 "corn tortillas",
                 "Salsa de Aguacate",
                 "finely chopped raw onion",
@@ -432,6 +445,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "chicken_tacos_avocado_salsa_verde",
             cookingTime: "00:30",
             difficulty: .low,
+            hot: .one, // Добавлено: содержит jalapeño в сальсе
             ingredients: [
                 "1 chicken breast",
                 "1/2 cup refried beans",
@@ -465,6 +479,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "ground_beef_tostadas_salsa_de_aguacate",
             cookingTime: "00:30",
             difficulty: .low,
+            hot: .two, // Добавлено: содержит chipotles
             ingredients: [
                 "1 lb. ground beef",
                 "1/2 small onion, finely chopped",
@@ -507,6 +522,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "bean_rice_tostadas_tomato_tomatillo_salsa",
             cookingTime: "00:30",
             difficulty: .low,
+            hot: .one, // Добавлено: содержит jalapeño
             ingredients: [
                 "4–5 tomatillos",
                 "2 plum tomatoes",
@@ -542,6 +558,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "half_and_half_tortillas",
             cookingTime: "00:30",
             difficulty: .low,
+            hot: .one, // Добавлено: нейтральные тортильи
             ingredients: [
                 "1 cup Masa Harina",
                 "1 cup all-purpose flour",
@@ -569,6 +586,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "quick_lunch_half_half_tortillas",
             cookingTime: "00:20",
             difficulty: .low,
+            hot: .one, // Добавлено: содержит pickled jalapenos
             ingredients: [
                 "1/2 cup Masa Harina",
                 "1/2 cup all-purpose flour",
@@ -603,6 +621,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "corn_tortillas_popcorn_kernels",
             cookingTime: "00:45",
             difficulty: .medium,
+            hot: .one, // Добавлено: нейтральные тортильи
             ingredients: [
                 "2 cups popcorn kernels",
                 "1 tablespoon Calcium Hydroxide (or Cal Mexicana)",
@@ -630,6 +649,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "sopes_refried_beans_cheese",
             cookingTime: "00:40",
             difficulty: .medium,
+            hot: .two, // Добавлено: содержит chipotles
             ingredients: [
                 "2 cups masa harina",
                 "1/2 teaspoon salt",
@@ -668,6 +688,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "mexican_beans_rice_soup",
             cookingTime: "00:45",
             difficulty: .low,
+            hot: .two, // Добавлено: содержит chipotle
             ingredients: [
                 "3 plum tomatoes",
                 "1/2 onion",
@@ -703,6 +724,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "roasted_poblano_soup",
             cookingTime: "01:00",
             difficulty: .medium,
+            hot: .one, // Добавлено: poblanos обычно умеренно острые
             ingredients: [
                 "4-5 poblano peppers",
                 "1 onion",
@@ -737,6 +759,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "easy_peruano_bean_soup",
             cookingTime: "00:35",
             difficulty: .low,
+            hot: .two, // Добавлено: содержит chipotle
             ingredients: [
                 "2 cups cooked Peruano beans (Canary, Mayocoba)",
                 "2 cups stock",
@@ -771,6 +794,7 @@ struct Recipe: Identifiable, Codable, Hashable {
             imageName: "chili_con_carne",
             cookingTime: "02:30",
             difficulty: .hard,
+            hot: .three, // Добавлено: содержит много острых перцев
             ingredients: [
                 "2-2.5 lbs. chuck roast",
                 "3 Ancho dried chiles",
@@ -807,3 +831,5 @@ struct Recipe: Identifiable, Codable, Hashable {
         )
     ]
 }
+
+        

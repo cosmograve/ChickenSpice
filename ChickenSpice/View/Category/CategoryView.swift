@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct CategoryView: View {
-    @StateObject private var viewModel = DailyRecipeViewModel()
+    @EnvironmentObject private var favoriteManager: FavoriteManager
+    @EnvironmentObject var weekMealManager: WeekMealManager
+
     private let columns = [
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16)
-        ]
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
     var body: some View {
         VStack {
-            if let recipe = viewModel.todaysRecipe {
+            if let recipe = weekMealManager.getTodaysMeal() {
                 ZStack {
                     Rectangle()
                         .foregroundStyle(.tabSelect)
@@ -24,11 +26,11 @@ struct CategoryView: View {
                             ZStack {
                                 Capsule()
                                     .frame(width: 107, height: 35)
-                                    
+                                
                                 Text("Today's choice")
                                     .foregroundStyle(.white)
                                     .font(.custom(.MontserratSemiBold, size: 12))
-                                    
+                                
                             }
                             .padding(.top, 10)
                             Text(recipe.title)
@@ -56,7 +58,7 @@ struct CategoryView: View {
                     .padding(.leading, 20)
                     
                 }
-                .frame(width: .infinity, height: 136)
+                .frame(width: UIScreen.main.bounds.width, height: 136)
                 .clipped()
             }
             
@@ -65,6 +67,8 @@ struct CategoryView: View {
                     ForEach(Categories.allCases, id: \.self) { category in
                         NavigationLink {
                             RecipesListView(category: category)
+                                .navigationBarBackButtonHidden()
+                                .environmentObject(favoriteManager)
                         } label: {
                             CategoryCard(category: category)
                         }
@@ -90,40 +94,4 @@ struct CategoryView: View {
 
 #Preview {
     MainView()
-}
-
-struct CategoryCard: View {
-    let category: Categories
-        
-        var body: some View {
-            ZStack(alignment: .bottomLeading) {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .overlay(
-                        Image(category.icon)
-                            .resizable()
-                            .scaledToFill()
-                    )
-                    .clipped()
-                
-                Text(category.title)
-                    .font(.custom(.MontserratBold, size: 18))
-                    .foregroundColor(.white)
-                    .shadow(color: .black, radius: 2, x: 0, y: 2)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-            }
-            .frame(height: UIScreen.main.bounds.height / 4)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            
-        }
-}
-
-struct RecipesListView: View {
-    let category: Categories
-    
-    var body: some View {
-        Text("Recipes for \(category.title)")
-            .navigationTitle(category.title)
-    }
 }

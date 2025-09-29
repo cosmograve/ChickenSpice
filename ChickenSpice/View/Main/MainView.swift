@@ -12,24 +12,25 @@ enum MainTab: CaseIterable, Hashable {
     
     var title: String {
         switch self {
-        case .cat:     return "Category"
-        case .fav:   return "Favourites"
-        case .meal:   return "Week meal"
+        case .cat: return "Category"
+        case .fav: return "Favourites"
+        case .meal: return "Week meal"
         }
     }
     
     var icon: String {
         switch self {
-        case .cat:     return "Category"
-        case .fav:   return "Favourites"
-        case .meal:   return "Meal"
+        case .cat: return "Category"
+        case .fav: return "Favourites"
+        case .meal: return "Meal"
         }
     }
 }
 
 struct MainView: View {
     @State private var selectedTab: MainTab = .cat
-    
+    @StateObject var favoriteManager = FavoriteManager()
+    @StateObject var weekMealManager = WeekMealManager()
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
@@ -37,10 +38,15 @@ struct MainView: View {
                     switch selectedTab {
                     case .cat:
                         CategoryView()
+                            .environmentObject(favoriteManager)
+                            .environmentObject(weekMealManager)
                     case .fav:
                         FavView()
+                            .environmentObject(favoriteManager)
                     case .meal:
                         MealView()
+                            .environmentObject(weekMealManager)
+                            .environmentObject(favoriteManager)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -49,6 +55,7 @@ struct MainView: View {
                 CustomTabBar(selectedTab: $selectedTab)
                     .padding(.bottom, 16)
             }
+            .ignoresSafeArea(.keyboard)
         }
     }
 }
