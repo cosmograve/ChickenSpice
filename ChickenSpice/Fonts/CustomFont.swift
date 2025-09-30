@@ -8,7 +8,11 @@ enum CustomFont: String {
 }
 
 extension Font {
-    static func custom(_ font: CustomFont, size: CGFloat) -> SwiftUI.Font {
-        SwiftUI.Font.custom(font.rawValue, size: size)
+    static func custom(_ font: CustomFont, size: CGFloat, relativeTo textStyle: Font.TextStyle? = nil) -> SwiftUI.Font {
+        if let textStyle = textStyle {
+            return SwiftUI.Font.custom(font.rawValue, size: size, relativeTo: textStyle)
+        } else {
+            return SwiftUI.Font.custom(font.rawValue, fixedSize: size)
+        }
     }
 }
